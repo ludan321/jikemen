@@ -1,0 +1,19 @@
+.monitor-box {
+    min-height: 500px;
+    margin: 20px;
+    border: 1px solid #ddd;
+}
+.mon-left {
+    border-right: 1px solid #ddd;
+    height: 500px;
+}
+
+.mon-right {
+    height: 250px;
+}
+
+.lz-btn {
+    margin-left: 30px;
+    margin-top: 20px;
+    display: inline-block;
+}
