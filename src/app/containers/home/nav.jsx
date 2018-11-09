@@ -1,13 +1,56 @@
 import React, {Component} from 'react';
-import {Link} from "react-router"
-export default class Navs extends Component {
+import {Link} from "react-router";
+import { Modal, Button, Row, Col, Input, Form, Icon } from 'antd';
+import styles from './css/nav.css';
+import {connect} from 'react-redux';
+import  { loginFetch, loginOut } from "../../actions/loginApi"
+
+const FormItem = Form.Item
+class Navs extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            loginModalVisible: false,
+        }
+    }
+
+    // 登录
+    handle_login_btn = (_type) => {
+        if (!_type) {
+            this.setState({ loginModalVisible: true })
+        } else {
+            this.props.loginOut({
+                url: 'api/v1/user',
+            })
+            console.log("退出")
+        }
+    }
+
+    // 登录提交
+    handle_submit =() => {
+        this.props.form.validateFields((err, values) => {
+            if (!err) {
+                const _object = {
+                    url: 'api/v1/user',
+                    ...values,
+                }
+                this.props.loginFetch(_object);
+                this.setState({ loginModalVisible: false})
+            }
+        })
+	}
+
+    // 返回
+    handle_cancle = () => {
+        this.setState({
+            loginModalVisible: false,
+        })
     }
 
     render() {
+        const { getFieldDecorator } = this.props.form;
+        console.log(this.props.login_Type, 'login_Type')
         return (
-
             <nav className="nav">
                 <div className="nav-body"><a className="nav-logo">Twilio</a>
                     <ul className="nav-menu">
@@ -465,7 +508,11 @@ export default class Navs extends Component {
                                     </ul>
                                 </div>
                             </li>
-                            <li className="nav-submenu__item"><a className="nav-submenu__link">Log in</a>
+                            <li className="nav-submenu__item">
+                                <a 
+                                    className="nav-submenu__link"
+                                    onClick={() => this.handle_login_btn(this.props.login_Type)}
+                                >{this.props.login_Type ? "退出" : "登录"}</a>
                             </li>
                         </ul>
                     </header>
@@ -599,8 +646,85 @@ export default class Navs extends Component {
                         </div>
                     </div>
                 </div>
+                {/** 登录 **/}
+                <Modal
+                    visible={this.state.loginModalVisible}
+                    title="用户登录"
+                    onOk={this.handleOk}
+                    onCancel={() => this.handle_cancle()}
+                    footer={null}
+                    >
+                    <Row>
+                        <Col>
+                            <Row>
+                                <Col className='loginForm'>
+                                    <Form>
+                                        <Row style={{marginTop: '25px'}}>
+                                            <Col span={18} offset={2}>	
+                                                <FormItem>
+                                                    {
+                                                        getFieldDecorator('username', {
+                                                            rules: [{ required: true, message: 'Please input your username!' }],
+                                                        })(
+                                                            <Input 
+                                                                prefix={<Icon type="user" 
+                                                                style={{ color: 'rgba(0,0,0,.25)' }} />} 
+                                                                placeholder="请输入用户名" 
+                                                            />
+                                                        )
+                                                    }
+                                                </FormItem>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col span={18} offset={2}>	
+                                                <FormItem>
+                                                    {
+                                                        getFieldDecorator('password', {
+                                                            rules: [{ required: true, message: 'Please input your Password!' }],
+                                                        })(
+                                                            <Input 
+                                                                prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} 
+                                                                type="password"
+                                                                placeholder="请输入密码" 
+                                                            />
+                                                        )
+                                                    }
+                                                </FormItem>
+                                            </Col>
+                                        </Row>
+                                        <Row>
+                                            <Col span={18} offset={2}>
+                                                <Button 
+                                                    type="primary" 
+                                                    style={{width: '100%', height: '32px'}}
+                                                    onClick={() => this.handle_submit()}											
+                                                >
+                                                    登录
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                    </Form>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>   
+                </Modal>
             </nav>
-
         )
     }
 }
+
+// 数据映射 state
+const mapStateToProps = (state) =>({
+    login_Type: state['loginApi']['login_Type'],
+});
+
+// 数据银蛇action
+const mapDispatchToProps = (dispatch) =>({
+    loginFetch: (iteminfo) => dispatch(loginFetch(iteminfo)),
+    loginOut: (item) => dispatch(loginOut(item)),
+})
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(Navs));
