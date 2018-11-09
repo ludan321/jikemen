@@ -5,20 +5,32 @@ const Option = Select.Option
 const ButtonGroup = Button.Group;
 import "./css/index.css"
 import {Link} from "react-router"
+import {axiosGet} from "../../../utils/request"
+import {resourceFun} from "../../actions/resource"
+import {connect} from 'react-redux';
 
-const data = [];
-for (var i = 0; i < 10; i++) {
-    data.push({
-        key: i,
-        name: `刘德华${i*3}`,
-        date: 32*i,
-        time: 12312,
-        size: 123123123,
-        state: 1313123
-
-    })
-}
-
+const data = [
+    {
+        'key':1,
+        "url": "http://35.220.148.164:9998/test_imclass_1_2018-11-08_16-19-25.mkv",
+        "name": "test_imclass_1_2018-11-08_16-19-25.mkv",
+        "memSize": 98,
+        "timeSize": 36,
+        "errorTimes": 0,
+        "downloadTimes": 0,
+        "createTime": "2018-11-09T00:20:04"
+    },
+    {
+        "key":2,
+        "url": "http://35.220.148.164:9998/test_imclass_1_2018-11-08_16-05-49.mkv",
+        "name": "test_imclass_1_2018-11-08_16-05-49.mkv",
+        "memSize": 5901,
+        "timeSize": 74,
+        "errorTimes": 0,
+        "downloadTimes": 0,
+        "createTime": "2018-11-09T00:07:12"
+    }
+];
 class Resouse extends Component {
     constructor(props) {
         super(props)
@@ -35,36 +47,39 @@ class Resouse extends Component {
                 dataIndex: 'chk',
                 render: (text, record) => {
                     return <Checkbox
-                        checked={this.state.selectedRowKeys.indexOf(record.key) > -1}
-                        onChange={() => this.onSelect(record.key)}/>
+                        checked={this.state.selectedRowKeys.indexOf(record.url) > -1}
+                        onChange={() => this.onSelect(record.url)}/>
                 },
-                align:"center"
+                align:"center",
 
             }, {
                 title: "文件名",
                 dataIndex: 'name',
                 sorter: (a, b) => a.name.length - b.name.length,
-                align:"center"
+                align:"center",
+                className:"thead",
+
             },
             {
                 title: '录制日期',
-                dataIndex: 'date',
+                dataIndex: 'createTime',
                 sorter: (a, b) => a.date - b.date,
                 className:"thead",
-                align:"center"
+                align:"center",
+
             }, {
                 title: '时长',
-                dataIndex: 'time',
+                dataIndex: 'timeSize',
                 className:"thead",
                 align:"center"
             }, {
                 title: '大小',
-                dataIndex: 'size',
+                dataIndex: 'memSize',
                 className:"thead",
                 align:"center"
             }, {
                 title: '状态',
-                dataIndex: 'state',
+                dataIndex: 'downloadTimes',
                 className:"thead",
                 align:"center"
             }];
@@ -73,10 +88,23 @@ class Resouse extends Component {
     };
 
     componentDidMount = () => {
-        for (var i = 0; i < 10; i++) {
-            this.state.allRowKeys.push(data[i].key)
-            // console.log(this.state.allRowKeys)
+        // axiosGet("api/v1/video").then(data=>{
+        //     console.log(data)
+        // })
+        let parpm={
+            url:"api/v1/video",
+            recordName:""
         }
+        this.props.resourceFun(parpm, ()=> {
+            console.log(this.props.resouseData.resouseData)
+            let data = this.props.resouseData.resouseData
+            for (var i=0;i<data.length;i++){
+                this.state.allRowKeys.push(data[i].url)
+                this.setState({
+                    loading:!this.state.loading
+                })
+            }
+        })
     };
     onSelectAll=()=>{
         this.setState({
@@ -239,9 +267,10 @@ class Resouse extends Component {
                     <Table
                         //rowSelection={rowSelection}
                         columns={this.columns}
-                        dataSource={data}
+                        dataSource={this.props.resouseData.resouseData}
                         pagination={false}
                         total={10}
+                        rowKey="url"
 
                     />
                     <Row type="flex" style={{height: "80px"}} align="middle">
@@ -266,4 +295,25 @@ class Resouse extends Component {
         )
     }
 }
-export default Form.create()(Resouse)
+// export default Form.create()(Resouse)
+
+
+
+// 映射Redux state到组件的属性
+function mapStateToProps(state) {
+    // console.log(state)
+    return {
+
+        resouseData:state.resouseReducer
+    }
+}
+
+//映射Redux actions到组件的属性
+function mapDispatchToProps(dispatch) {
+    return {
+        resourceFun: (args, cb) => dispatch(resourceFun(args, cb)),
+    }
+}
+
+//连接组件
+export default connect(mapStateToProps, mapDispatchToProps)(Form.create()(Resouse))

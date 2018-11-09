@@ -1,4 +1,4 @@
-import {FetchPost} from  "../../utils/fetch"
+import {FetchPost} from  "../../utils/request"
 
 export const loginFun=(params,cb)=>{
     console.log(params);

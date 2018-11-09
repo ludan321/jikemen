@@ -7,7 +7,7 @@ import Main from "../app/containers/home/main"
 import Resource from "../app/containers/resourceManagement/index"
 class RouteMap extends React.Component {
     updateHandle() {
-        console.log('每次router变化之后都会触发')
+        // console.log('每次router变化之后都会触发')
     }
 
 

@@ -1,8 +1,12 @@
 import React, {PureComponent} from 'react';
-import {Row, Col, Button, Input, Table,Breadcrumb} from 'antd'
+import {Row, Col, Button, Input, Table, Breadcrumb} from 'antd'
 import './css/index.css'
 import {Link} from "react-router"
+import  {startRecord,endRecord,startRtmp,endRtmp,pannelFun} from "../../actions/record"
+import {connect} from 'react-redux';
 
+// import {FetchPost} from "../../../utils/fetch"
+import axios from "axios"
 import RechartPage from './RechartPage';
 import ReactPlayer from 'react-player'
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip} from "recharts";
@@ -26,13 +30,13 @@ const columns = [
         title: 'Age',
         dataIndex: 'age',
         key: 'age',
-        align:"center"
+        align: "center"
     },
     {
         title: 'Address',
         dataIndex: 'address',
         key: 'address',
-        align:"center"
+        align: "center"
     },
 ];
 
@@ -59,27 +63,83 @@ const data1 = [
         description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
     },
 ]
-export default class Loadmore extends PureComponent {
+class Loadmore extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            openVisible: false,
-            openJl: false,
-            input_url: '',
-            video_url: 'http://vjs.zencdn.net/v/oceans.mp4',
+            openVisible: true,
+            isRtmp:true
         }
     };
 
     componentDidMount = () => {
+        this.pannel()
     };
+    //打开录制面板
+    pannel=()=>{
 
-    componentWillUnMount() {
-        this.setState({reloade_visible: false})
+        let parpms = {
+            "url":"api/v1/vnc/pannel",
+            "recordUrl":"https://vjs.zencdn.net/v/oceans.mp4",
+            "recordName":"qweqweq"
+        }
+        this.props.pannelFun( parpms,()=>{
+
+        })
     }
+    componentWillUnMount() {
+    }
+    ends=()=>{
+        console.log("播放结束")
+    }
+    startRecords=()=>{
+        this.setState({
+            openVisible: !this.state.openVisible,
 
+        },()=>{
+            if(!this.state.openVisible){
+                let parms={
+                    url:"api/v1/record",
+                    recordUrl:"https://vjs.zencdn.net/v/oceans.mp4",
+                    hasAudio:"1"
+                };
+                this.props.startRecord(parms)
+            }else {
+                let parms={
+                    url:"api/v1/record/allsh",
+                    recordUrl:"https://vjs.zencdn.net/v/oceans.mp4",
+                };
+                this.props.endRecord(parms)
+
+            }
+        })
+    }
+    _Rtmp=()=>{
+
+        this.setState({
+            isRtmp:!this.state.isRtmp
+        },()=>{
+            if(!this.state.isRtmp){
+                let parpms={
+                    url:"api/v1/rtmp",
+                    rtmpUrl:"https://vjs.zencdn.net/v/oceans.mp4",
+                    display:"1",
+                    hasAudio:"1"
+                }
+                this.props.startRtmp(parpms)
+            }else {
+                let parpms={
+                    url:"api/v1/rtmp",
+                    rtmpUrl:"https://vjs.zencdn.net/v/oceans.mp4",
+                    display:"1"
+                }
+                this.props.endRtmp(parpms)
+            }
+
+
+        })
+    }
     render() {
-        console.log(this.state.video_url, 'video_url')
-
         return (
             <div>
                 <Row>
@@ -104,11 +164,12 @@ export default class Loadmore extends PureComponent {
                                     overflow: 'hidden'
                                 }}>
                                     <ReactPlayer
-                                        url={"http://easyhtml5video.com/assets/video/new/Penguins_of_Madagascar.mp4"}
+                                        url={"https://vjs.zencdn.net/v/oceans.mp4"}
                                         width="100%"
                                         playing={false}
                                         controls={true}
                                         height="100%"
+                                        onEnded={this.ends}
                                     />
                                 </div>
                             </Col>
@@ -131,24 +192,25 @@ export default class Loadmore extends PureComponent {
                                 <div style={{borderTop: '1px solid #ddd'}} className="mon-right">
                                     <div>
                                         <Button type="primary" className="lz-btn"
-                                                onClick={() => this.open_video(!this.state.openVisible)}>
-                                            {this.state.openVisible ? '结束录制' : '开始录制'}
+                                                onClick={() => this.startRecords()}>
+                                            { this.state.openVisible?'开始录制':"结束录制"}
                                         </Button>
                                     </div>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
                                             <Button type="primary"
-                                                    onClick={() => this.setState({openJl: !this.state.openJl})}>
-                                                {this.state.openJl ? "结束截流" : '开始截流'}
+                                                    onClick={this._Rtmp}>
+                                                { this.state.isRtmp?'开始推流':"结束推流"}
                                             </Button>
                                         </Col>
                                         <Col span={15}>
-                                            <Input addonBefore="Http://" addonAfter=".com" defaultValue=""/>
+                                            <Input addonBefore="Http://" defaultValue=""/>
                                         </Col>
                                     </Row>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
-                                            <Button type="primary" onClick={() => this.handle_click_http()}>切换网址</Button>
+                                            <Button type="primary"
+                                                    onClick={() => this.handle_click_http()}>切换网址</Button>
                                         </Col>
                                         <Col span={15}>
                                             <Input addonBefore="Http://" defaultValue=""
@@ -174,3 +236,28 @@ export default class Loadmore extends PureComponent {
         )
     }
 }
+
+
+// 映射Redux state到组件的属性
+function mapStateToProps(state) {
+    console.log(state)
+    return {
+
+        // resouseData:state.resouseReducer
+        pannelData:state.recordReducer
+    }
+}
+
+//映射Redux actions到组件的属性
+function mapDispatchToProps(dispatch) {
+    return {
+        startRecord: (args, cb) => dispatch(startRecord(args, cb)),
+        endRecord: (args, cb) => dispatch(endRecord(args, cb)),
+        startRtmp: (args, cb) => dispatch(startRtmp(args, cb)),
+        endRtmp: (args, cb) => dispatch(endRtmp(args, cb)),
+        pannelFun: (args, cb) => dispatch(pannelFun(args, cb)),
+    }
+}
+
+//连接组件
+export default connect(mapStateToProps, mapDispatchToProps)(Loadmore)

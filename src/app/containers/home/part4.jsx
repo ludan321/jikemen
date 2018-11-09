@@ -71,7 +71,7 @@ export  default class Part4 extends Component {
                                         <li className="code__line green">&lt;Response&gt;</li>
                                         <li className="code__line">
                                             <span className="red">&lt;Message&gt;</span>
-                                            <span className="code__editable" contentEditable="true"
+                                            <span className="code__editable"
                                             role="code">Ahoy, world!</span>
                                             <span className="red">&lt;/Message&gt;</span>
                                         </li>
