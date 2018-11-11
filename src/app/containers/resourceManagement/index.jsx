@@ -8,6 +8,7 @@ import {Link} from "react-router"
 import {axiosGet} from "../../../utils/request"
 import {resourceFun} from "../../actions/resource"
 import {connect} from 'react-redux';
+import moment from "moment"
 
 const data = [
     {
@@ -63,22 +64,37 @@ class Resouse extends Component {
             {
                 title: '录制日期',
                 dataIndex: 'createTime',
-                sorter: (a, b) => a.date - b.date,
+                sorter: (a, b) => moment(a.createTime,'YYYY-MM-DD HH:mm:ss').valueOf() - moment(b.createTime,'YYYY-MM-DD HH:mm:ss').valueOf(),
                 className:"thead",
                 align:"center",
+                render:(text,record)=>{
+                    return moment(record.createTime).format('YYYY-MM-DD, h:mm:ss')
+                }
 
             }, {
                 title: '时长',
                 dataIndex: 'timeSize',
                 className:"thead",
-                align:"center"
+                align:"center",
+                render:(text,record)=>{
+                    return record.timeSize+"s"
+                }
             }, {
                 title: '大小',
                 dataIndex: 'memSize',
                 className:"thead",
-                align:"center"
+                align:"center",
+                render:(text,record)=>{
+                    return (record.memSize/1024).toFixed(2)+"M"
+                }
             }, {
-                title: '状态',
+                title: ()=>{
+                    return <div>
+                        <p style={{margin:"0px"}}>状态</p>
+                        <p style={{margin:"0px"}}>录制中/最近录制/将要过期</p>
+                    </div>
+                },
+
                 dataIndex: 'downloadTimes',
                 className:"thead",
                 align:"center"
@@ -96,7 +112,7 @@ class Resouse extends Component {
             recordName:""
         }
         this.props.resourceFun(parpm, ()=> {
-            console.log(this.props.resouseData.resouseData)
+            // console.log(this.props.resouseData.resouseData)
             let data = this.props.resouseData.resouseData
             for (var i=0;i<data.length;i++){
                 this.state.allRowKeys.push(data[i].url)
@@ -147,6 +163,8 @@ class Resouse extends Component {
 
     render() {
         const {getFieldDecorator} = this.props.form;
+        console.log(moment("2018-11-09T21:02:44",'YYYY-MM-DD HH:mm:ss').valueOf())
+
         return (
             <Form>
                 <div>

@@ -1,11 +1,9 @@
 import React, {PureComponent} from 'react';
-import {Row, Col, Button, Input, Table, Breadcrumb} from 'antd'
+import {Row, Col, Button, Input, Table, Breadcrumb, Switch} from 'antd'
 import './css/index.css'
 import {Link} from "react-router"
-import  {startRecord,endRecord,startRtmp,endRtmp,pannelFun} from "../../actions/record"
+import  {startRecord, endRecord, startRtmp, endRtmp, pannelFun} from "../../actions/record"
 import {connect} from 'react-redux';
-
-// import {FetchPost} from "../../../utils/fetch"
 import axios from "axios"
 import RechartPage from './RechartPage';
 import ReactPlayer from 'react-player'
@@ -68,7 +66,7 @@ class Loadmore extends PureComponent {
         super(props)
         this.state = {
             openVisible: true,
-            isRtmp:true
+            isRtmp: true
         }
     };
 
@@ -76,62 +74,64 @@ class Loadmore extends PureComponent {
         this.pannel()
     };
     //打开录制面板
-    pannel=()=>{
+    pannel = () => {
 
         let parpms = {
-            "url":"api/v1/vnc/pannel",
-            "recordUrl":"https://vjs.zencdn.net/v/oceans.mp4",
-            "recordName":"qweqweq"
+            "url": "api/v1/vnc/pannel",
+            "recordUrl": "https://vjs.zencdn.net/v/oceans.mp4",
+            "recordName": "qweqweq"
         }
-        this.props.pannelFun( parpms,()=>{
+        this.props.pannelFun(parpms, () => {
 
         })
     }
+
     componentWillUnMount() {
     }
-    ends=()=>{
+
+    ends = () => {
         console.log("播放结束")
     }
-    startRecords=()=>{
+    startRecords = () => {
         this.setState({
             openVisible: !this.state.openVisible,
 
-        },()=>{
-            if(!this.state.openVisible){
-                let parms={
-                    url:"api/v1/record",
-                    recordUrl:"https://vjs.zencdn.net/v/oceans.mp4",
-                    hasAudio:"1"
+        }, () => {
+            if (!this.state.openVisible) {
+                let parms = {
+                    url: "api/v1/record",
+                    recordUrl: "https://vjs.zencdn.net/v/oceans.mp4",
+                    hasAudio: "1"
                 };
                 this.props.startRecord(parms)
-            }else {
-                let parms={
-                    url:"api/v1/record/allsh",
-                    recordUrl:"https://vjs.zencdn.net/v/oceans.mp4",
+            } else {
+                let parms = {
+                    url: "api/v1/record/allsh",
+                    recordUrl: "https://vjs.zencdn.net/v/oceans.mp4",
                 };
                 this.props.endRecord(parms)
 
             }
         })
     }
-    _Rtmp=()=>{
+    _Rtmp = () => {
 
         this.setState({
-            isRtmp:!this.state.isRtmp
-        },()=>{
-            if(!this.state.isRtmp){
-                let parpms={
-                    url:"api/v1/rtmp",
-                    rtmpUrl:"https://vjs.zencdn.net/v/oceans.mp4",
-                    display:"1",
-                    hasAudio:"1"
+            isRtmp: !this.state.isRtmp
+        }, () => {
+            if (!this.state.isRtmp) {
+                let parpms = {
+                    url: "api/v1/rtmp",
+                    rtmpUrl: "https://vjs.zencdn.net/v/oceans.mp4",
+                    display: "1",
+                    hasAudio: "1"
                 }
                 this.props.startRtmp(parpms)
-            }else {
-                let parpms={
-                    url:"api/v1/rtmp",
-                    rtmpUrl:"https://vjs.zencdn.net/v/oceans.mp4",
-                    display:"1"
+            } else {
+                let parpms = {
+                    url: "api/v1/rtmp",
+                    rtmpUrl: "https://vjs.zencdn.net/v/oceans.mp4",
+                    display: "1"
                 }
                 this.props.endRtmp(parpms)
             }
@@ -139,6 +139,15 @@ class Loadmore extends PureComponent {
 
         })
     }
+    copy = () => {
+        console.log(this.refs.net)
+        let Url2 = document.getElementById("net");
+        console.log(Url2)
+        Url2.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        alert("已复制好，可贴粘。");
+    }
+
     render() {
         return (
             <div>
@@ -193,30 +202,48 @@ class Loadmore extends PureComponent {
                                     <div>
                                         <Button type="primary" className="lz-btn"
                                                 onClick={() => this.startRecords()}>
-                                            { this.state.openVisible?'开始录制':"结束录制"}
+                                            { this.state.openVisible ? '开始录制' : "结束录制"}
                                         </Button>
                                     </div>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
                                             <Button type="primary"
                                                     onClick={this._Rtmp}>
-                                                { this.state.isRtmp?'开始推流':"结束推流"}
+                                                { this.state.isRtmp ? '开始推流' : "结束推流"}
                                             </Button>
                                         </Col>
                                         <Col span={15}>
-                                            <Input addonBefore="Http://" defaultValue=""/>
+                                            <Input addonBefore="Http://" defaultValue="www.baidu.com"/>
                                         </Col>
                                     </Row>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
                                             <Button type="primary"
-                                                    onClick={() => this.handle_click_http()}>切换网址</Button>
+                                            >切换网址</Button>
                                         </Col>
                                         <Col span={15}>
-                                            <Input addonBefore="Http://" defaultValue=""
-                                                   onChange={(e) => this.onChangeInput(e)}/>
-                                            <p style={{fontSize: '12px'}}>clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</p>
-                                            <p style={{fontSize: '12px'}}>vjs.zencdn.net/v/oceans.mp4</p>
+                                            <Input
+                                                addonBefore="Http://"
+                                                defaultValue="www.baidu.com"
+                                                ref="net"
+                                                id="net"
+                                            />
+                                            <div >
+                                                "www.baidu.com"
+                                            </div>
+                                            {/*<p style={{fontSize: '12px'}}>clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</p>*/}
+                                            {/*<p style={{fontSize: '12px'}}>vjs.zencdn.net/v/oceans.mp4</p>*/}
+                                        </Col>
+                                    </Row>
+                                    <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
+                                        <Col span={5}>
+                                            <Button
+                                                type="primary"
+                                                onClick={this.copy}
+                                            >分享链接</Button>
+                                        </Col>
+                                        <Col span={15} offset={1}>
+                                            <Switch/>
                                         </Col>
                                     </Row>
                                 </div>
@@ -242,9 +269,7 @@ class Loadmore extends PureComponent {
 function mapStateToProps(state) {
     console.log(state)
     return {
-
-        // resouseData:state.resouseReducer
-        pannelData:state.recordReducer
+        pannelData: state.recordReducer
     }
 }
 

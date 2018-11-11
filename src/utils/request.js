@@ -8,15 +8,6 @@ export function axiosGet( params) {
     let fullUrl = BaseURl+params.url
     delete params.url
     return new Promise((resolve, reject) => {
-        // fetch(fullUrl, params).then((response) => {
-        //     console.log(response)
-        //     // return response.json();
-        // }).then(data => {
-        //     resolve(data);
-        // }).catch((error) => {
-        //     reject(error)
-        // });
-
         axios.get(fullUrl, {
             params: {
                 ...params
@@ -31,26 +22,17 @@ export function axiosGet( params) {
 export function axiosPost(params) {
     let fullUrl = BaseURl+params.url
     delete params.url
-    // console.log(Object.keys(params))
-    // Object.keys(params)
-
     let str = ""
     for (let key in params){
-        // console.log(`${key}=${params[key]}`)
+        console.log(key)
+
         str +=`${key}=${params[key]}&`
     }
-    console.log(str)
+    // console.log(str)
+    let URL = (fullUrl+"?"+str).substr(0,(fullUrl+"?"+str).length-1)
     return new Promise((resolve, reject) => {
-        // fetch(fullUrl, params).then((response) => {
-        //     console.log(response)
-        //     // return response.json();
-        // }).then(data => {
-        //     resolve(data);
-        // }).catch((error) => {
-        //     reject(error)
-        // });
 
-        axios.post(fullUrl+"?"+str,{
+        axios.post(URL,{
             ...params
         }).then(data=>{
             resolve(data);

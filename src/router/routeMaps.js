@@ -5,6 +5,7 @@ import  Login from "../app/containers/login/login"
 import Monitor from "../app/containers/monitor/index"
 import Main from "../app/containers/home/main"
 import Resource from "../app/containers/resourceManagement/index"
+import {connect} from "react-redux"
 class RouteMap extends React.Component {
     updateHandle() {
         // console.log('每次router变化之后都会触发')
@@ -31,5 +32,19 @@ class RouteMap extends React.Component {
         )
     }
 }
+// 映射Redux state到组件的属性
+function mapStateToProps(state) {
+    return {
 
-export default RouteMap
+    }
+}
+
+//映射Redux actions到组件的属性
+function mapDispatchToProps(dispatch) {
+    return {
+    }
+}
+
+//连接组件
+export default connect(mapStateToProps, mapDispatchToProps)(RouteMap)
+// export default RouteMap
