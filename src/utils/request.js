@@ -41,3 +41,22 @@ export function axiosPost(params) {
         });
     })
 }
+
+export function axiosDelete(params) {
+    let fullUrl = BaseURl+params.url
+    delete params.url
+    return new Promise((resolve, reject) => {
+        fetch(fullUrl, {
+            method: "DELETE",
+        }).then(res => {
+            resolve(res)
+        }).catch(e => {
+            console.log(e)
+            reject(e)
+        })
+        // axios.delete("/ehrReferralObjPro")
+        //       .then(function(response) {
+        //         }
+    })
+
+}
