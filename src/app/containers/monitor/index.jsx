@@ -1,11 +1,9 @@
 import React, {PureComponent} from 'react';
-import {Row, Col, Button, Input, Table, Breadcrumb, Switch} from 'antd'
+import {Row, Col, Button, Input, Select, Table, Breadcrumb, Switch, AutoComplete} from 'antd'
 import './css/index.css'
 import {Link} from "react-router"
-import  {startRecord, endRecord, startRtmp, endRtmp, pannelFun,playsFun} from "../../actions/record"
+import  {startRecord, endRecord, startRtmp, endRtmp, pannelFun, playsFun} from "../../actions/record"
 import {connect} from 'react-redux';
-import axios from "axios"
-import RechartPage from './RechartPage';
 import ReactPlayer from 'react-player'
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip} from "recharts";
 const data = [
@@ -60,13 +58,17 @@ const data1 = [
         address: 'Sidney No. 1 Lake Park',
         description: 'My name is Joe Black, I am 32 years old, living in Sidney No. 1 Lake Park.'
     },
-]
+];
+const InputGroup = Input.Group;
+const Option = Select.Option;
+
 class Loadmore extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
             openVisible: true,
-            isRtmp: true
+            isRtmp: true,
+            dataSource: [],
         }
     };
 
@@ -93,19 +95,19 @@ class Loadmore extends PureComponent {
 
     ends = () => {
         // console.log("播放结束")
-        let number  = ++this.props.playUrl.playNumber
+        let number = ++this.props.playUrl.playNumber
         // console.log(this.props.playUrl)
         // console.log(number)
 
-        if(number>=this.props.playUrl.playUrl.length){
-            number=0
+        if (number >= this.props.playUrl.playUrl.length) {
+            number = 0
         }
-        let parpms={
-            playUrl:this.props.playUrl.playUrl,
-            playNumber:number,
-            currentPlay:this.props.playUrl.playUrl[number]
+        let parpms = {
+            playUrl: this.props.playUrl.playUrl,
+            playNumber: number,
+            currentPlay: this.props.playUrl.playUrl[number]
         }
-        this.props.playsFun(parpms,()=>{
+        this.props.playsFun(parpms, () => {
 
         })
     }
@@ -157,41 +159,23 @@ class Loadmore extends PureComponent {
         })
     }
     copy = () => {
-        console.log(this.refs.net)
+        // console.log(this.refs.net)
         let Url2 = document.getElementById("net");
         console.log(Url2)
         Url2.select(); // 选择对象
         document.execCommand("Copy"); // 执行浏览器复制命令
         alert("已复制好，可贴粘。");
     }
-    preVideo=()=>{
 
-        let number  = --this.props.playUrl.playNumber
-        // console.log(this.props.playUrl)
-        // console.log(number)
+    handleChange = (value) => {
+        // console.log(value)
 
-
-        if(number<0){
-            number=this.props.playUrl.playUrl.length-1
-        }
-        // console.log(this.props.playUrl.playUrl[number])
-        let parpms={
-            playUrl:this.props.playUrl.playUrl,
-            playNumber:number,
-            currentPlay:this.props.playUrl.playUrl[number]
-        }
-        this.props.playsFun(parpms,()=>{
-
-        })
     }
-    nextVideo=()=>{
 
-        this.ends()
-    }
     render() {
         // let {currentPlay} =this.props.playUrl.currentPlay;
-        console.log(this.props.playUrl.currentPlay);
-        let currentPlay  = this.props.playUrl.currentPlay?this.props.playUrl.currentPlay:"https://vjs.zencdn.net/v/oceans.mp4"
+        // console.log(this.props.playUrl.currentPlay);
+        let currentPlay = "https://vjs.zencdn.net/v/oceans.mp4";
         return (
             <div>
                 <Row>
@@ -247,14 +231,6 @@ class Loadmore extends PureComponent {
                                                 onClick={() => this.startRecords()}>
                                             { this.state.openVisible ? '开始录制' : "结束录制"}
                                         </Button>
-                                        {/*<Button type="primary" className="lz-btn"*/}
-                                                {/*onClick={() => this.preVideo()}>*/}
-                                           {/*上一个*/}
-                                        {/*</Button>*/}
-                                        {/*<Button type="primary" className="lz-btn"*/}
-                                                {/*onClick={() => this.nextVideo()}>*/}
-                                           {/*下一个*/}
-                                        {/*</Button>*/}
                                     </div>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
@@ -264,7 +240,17 @@ class Loadmore extends PureComponent {
                                             </Button>
                                         </Col>
                                         <Col span={15}>
-                                            <Input addonBefore="Https://" defaultValue="www.baidu.com"/>
+                                            <InputGroup compact>
+                                                <Select defaultValue="Https://" style={{width: "100px"}}>
+                                                    <Option value="Https://">Https://</Option>
+                                                    <Option value="Http://">Http://</Option>
+                                                </Select>
+                                                <AutoComplete
+                                                    dataSource={this.state.dataSource}
+                                                    onChange={this.handleChange}
+                                                    placeholder="Email"
+                                                />
+                                            </InputGroup>
                                         </Col>
                                     </Row>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
@@ -273,21 +259,18 @@ class Loadmore extends PureComponent {
                                             >切换网址</Button>
                                         </Col>
                                         <Col span={15}>
-                                            <Input
-                                                addonBefore="Https://"
-                                                defaultValue="www.baidu.com"
-                                                ref="net"
-
-                                            />
-                                            <div >
-                                                <Input
-                                                    id="net"
-                                                    type="text"
-                                                    value={currentPlay}
-                                                    readOnly={true}
-                                                    style={{height:"0px", overflow:"hidden", padding:"0",border:"none"}}
+                                            <InputGroup compact>
+                                                <Select defaultValue="Https://" style={{width: "100px"}}>
+                                                    <Option value="Https://">Https://</Option>
+                                                    <Option value="Http://">Http://</Option>
+                                                </Select>
+                                                <AutoComplete
+                                                    dataSource={this.state.dataSource}
+                                                    onChange={this.handleChange}
+                                                    placeholder="Email"
                                                 />
-                                            </div>
+                                            </InputGroup>
+
 
                                         </Col>
                                     </Row>
@@ -314,6 +297,15 @@ class Loadmore extends PureComponent {
                         />
                     </Col>
                 </Row>
+                <div style={{height: "0px"}}>
+                    <Input
+                        id="net"
+                        type="text"
+                        value={currentPlay}
+                        readOnly={true}
+                        style={{height: "0px", overflow: "hidden", padding: "0", border: "none"}}
+                    />
+                </div>
             </div>
 
         )
@@ -326,7 +318,7 @@ function mapStateToProps(state) {
     // console.log(state)
     return {
         pannelData: state.recordReducer,
-        playUrl:state.recordReducer.PlayData
+        playUrl: state.recordReducer.PlayData
     }
 }
 
