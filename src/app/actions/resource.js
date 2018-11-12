@@ -11,8 +11,6 @@ export const resourceFun=(params,cb)=>{
             });
             cb()
         }).catch((response) => {
-            // console.log('error==>', response);
-            // dispatch({ type:"SIMPLE_OPEN_ACCOUNT.ERROR"});
         });;
     }
 }

@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import {Row, Col, Breadcrumb, Form, Select, Table, Button, Checkbox, Pagination} from 'antd';
+import {hashHistory} from 'react-router';
+
 import "./css/index.css"
 import {Link} from "react-router"
 import {resourceFun} from "../../actions/resource"
+import {playsFun} from "../../actions/record"
 import {connect} from 'react-redux';
 import moment from "moment"
 const FormItem = Form.Item;
@@ -133,11 +136,29 @@ class Resouse extends Component {
         })
 
     }
-
+    plays=()=>{
+        console.log(this.state.selectedRowKeys);
+        let parpm={
+            playUrl:this.state.selectedRowKeys,
+            playNumber:0,
+            currentPlay:this.state.selectedRowKeys[0]
+        }
+        this.props.playsFun(parpm,()=>{
+            hashHistory.push({
+                pathname:"monitor"
+            })  
+        })
+        
+        
+    }
+    download=()=>{
+        console.log(this.state.selectedRowKeys)
+        window.open("http://35.220.148.164:9998/imclass-test_2_2018-11-12_05-23-00.mkv", "_blank")
+    }
+    
     render() {
         const {getFieldDecorator} = this.props.form;
-        console.log(moment("2018-11-09T21:02:44",'YYYY-MM-DD HH:mm:ss').valueOf())
-
+        
         return (
             <Form>
                 <div>
@@ -240,10 +261,14 @@ class Resouse extends Component {
                         <ButtonGroup>
                             <Button
                                 size="large"
-                                style={{width: "80px"}}>播放</Button>
+                                style={{width: "80px"}}
+                                onClick={this.plays}
+                            >播放</Button>
                             <Button
                                 size="large"
-                                style={{width: "80px"}}>下载</Button>
+                                style={{width: "80px"}}
+                                onClick={this.download}
+                            >下载</Button>
                             <Button
                                 size="large"
                                 style={{width: "80px"}}>分享</Button>
@@ -303,6 +328,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         resourceFun: (args, cb) => dispatch(resourceFun(args, cb)),
+        playsFun: (args, cb) => dispatch(playsFun(args, cb)),
     }
 }
 

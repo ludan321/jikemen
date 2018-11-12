@@ -1,8 +1,8 @@
 import 'whatwg-fetch'
 import 'es6-promise'
 import axios from "axios"
-
-const BaseURl = 'http://35.220.148.164:9999/zukvnc/';
+const NODE_ENV = true;
+const BaseURl = NODE_ENV?'http://35.220.148.164:9999/zukvnc/':'https://35.220.148.164:9999/zukvnc/';
 
 export function axiosGet( params) {
     let fullUrl = BaseURl+params.url
@@ -24,7 +24,7 @@ export function axiosPost(params) {
     delete params.url
     let str = ""
     for (let key in params){
-        console.log(key)
+        // console.log(key)
 
         str +=`${key}=${params[key]}&`
     }

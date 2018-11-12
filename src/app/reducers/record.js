@@ -1,17 +1,23 @@
 
-const initialState = {}
-export default function resouseReducer(state = initialState, action) {
-    switch (action.type) {
+const initialState = {
+    PlayData:{
+        currentPlay:""
+    }
 
-        case "RESOUSE":
-            // console.log(action)
-            return Object.assign({}, state, {
-                resouseData: action.resouseData
-            });
+}
+export default function recordReducer(state = initialState, action) {
+
+
+    switch (action.type) {
         case "OPENPANNEL":
             return Object.assign({}, state, {
-                pannel: action.resouseData
+                pannel: action.pannelData
             });
+        case "PLAY":
+            return Object.assign({}, state, {
+                PlayData: action.playData
+            });
+            break;
 
         default:
             return initialState;

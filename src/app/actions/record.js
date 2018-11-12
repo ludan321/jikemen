@@ -67,15 +67,26 @@ export const endRtmp=(params,cb)=>{
 export  const pannelFun=(params,cb)=>{
     return (dispatch)=>{
         return axiosPost(params).then(res=>{
-            console.log('服务器返回：', res);
+            // console.log('服务器返回：', res);
             dispatch({
                 type: "OPENPANNEL",
-                resouseData: res.data.data
+                pannelData: res.data.data
             });
             !!cb()&&cb()
         }).catch((response) => {
             // console.log('error==>', response);
             // dispatch({ type:"SIMPLE_OPEN_ACCOUNT.ERROR"});
         });;
+    }
+}
+export const playsFun = (params,cb)=>{
+    console.log(params)
+    // debugger
+    return (dispatch)=>{
+        dispatch({
+            type: "PLAY",
+            playData: params
+        });
+        cb()
     }
 }

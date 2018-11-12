@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {Row, Col, Button, Input, Table, Breadcrumb, Switch} from 'antd'
 import './css/index.css'
 import {Link} from "react-router"
-import  {startRecord, endRecord, startRtmp, endRtmp, pannelFun} from "../../actions/record"
+import  {startRecord, endRecord, startRtmp, endRtmp, pannelFun,playsFun} from "../../actions/record"
 import {connect} from 'react-redux';
 import axios from "axios"
 import RechartPage from './RechartPage';
@@ -79,7 +79,9 @@ class Loadmore extends PureComponent {
         let parpms = {
             "url": "api/v1/vnc/pannel",
             "recordUrl": "https://vjs.zencdn.net/v/oceans.mp4",
-            "recordName": "qweqweq"
+            "recordName": "qweqweq",
+            // stateA:this.props.playUrl
+
         }
         this.props.pannelFun(parpms, () => {
 
@@ -90,7 +92,22 @@ class Loadmore extends PureComponent {
     }
 
     ends = () => {
-        console.log("播放结束")
+        // console.log("播放结束")
+        let number  = ++this.props.playUrl.playNumber
+        // console.log(this.props.playUrl)
+        // console.log(number)
+
+        if(number>=this.props.playUrl.playUrl.length){
+            number=0
+        }
+        let parpms={
+            playUrl:this.props.playUrl.playUrl,
+            playNumber:number,
+            currentPlay:this.props.playUrl.playUrl[number]
+        }
+        this.props.playsFun(parpms,()=>{
+
+        })
     }
     startRecords = () => {
         this.setState({
@@ -147,8 +164,34 @@ class Loadmore extends PureComponent {
         document.execCommand("Copy"); // 执行浏览器复制命令
         alert("已复制好，可贴粘。");
     }
+    preVideo=()=>{
 
+        let number  = --this.props.playUrl.playNumber
+        // console.log(this.props.playUrl)
+        // console.log(number)
+
+
+        if(number<0){
+            number=this.props.playUrl.playUrl.length-1
+        }
+        // console.log(this.props.playUrl.playUrl[number])
+        let parpms={
+            playUrl:this.props.playUrl.playUrl,
+            playNumber:number,
+            currentPlay:this.props.playUrl.playUrl[number]
+        }
+        this.props.playsFun(parpms,()=>{
+
+        })
+    }
+    nextVideo=()=>{
+
+        this.ends()
+    }
     render() {
+        // let {currentPlay} =this.props.playUrl.currentPlay;
+        console.log(this.props.playUrl.currentPlay);
+        let currentPlay  = this.props.playUrl.currentPlay?this.props.playUrl.currentPlay:""
         return (
             <div>
                 <Row>
@@ -173,7 +216,7 @@ class Loadmore extends PureComponent {
                                     overflow: 'hidden'
                                 }}>
                                     <ReactPlayer
-                                        url={"https://vjs.zencdn.net/v/oceans.mp4"}
+                                        url={currentPlay}
                                         width="100%"
                                         playing={false}
                                         controls={true}
@@ -204,6 +247,14 @@ class Loadmore extends PureComponent {
                                                 onClick={() => this.startRecords()}>
                                             { this.state.openVisible ? '开始录制' : "结束录制"}
                                         </Button>
+                                        <Button type="primary" className="lz-btn"
+                                                onClick={() => this.preVideo()}>
+                                           上一个
+                                        </Button>
+                                        <Button type="primary" className="lz-btn"
+                                                onClick={() => this.nextVideo()}>
+                                           下一个
+                                        </Button>
                                     </div>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
@@ -213,7 +264,7 @@ class Loadmore extends PureComponent {
                                             </Button>
                                         </Col>
                                         <Col span={15}>
-                                            <Input addonBefore="Http://" defaultValue="www.baidu.com"/>
+                                            <Input addonBefore="Https://" defaultValue="www.baidu.com"/>
                                         </Col>
                                     </Row>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
@@ -223,16 +274,21 @@ class Loadmore extends PureComponent {
                                         </Col>
                                         <Col span={15}>
                                             <Input
-                                                addonBefore="Http://"
+                                                addonBefore="Https://"
                                                 defaultValue="www.baidu.com"
                                                 ref="net"
-                                                id="net"
+
                                             />
                                             <div >
-                                                "www.baidu.com"
+                                                <Input
+                                                    id="net"
+                                                    type="text"
+                                                    value={currentPlay}
+                                                    readOnly={true}
+                                                    style={{height:"0px", overflow:"hidden", padding:"0",border:"none"}}
+                                                />
                                             </div>
-                                            {/*<p style={{fontSize: '12px'}}>clips.vorwaerts-gmbh.de/big_buck_bunny.mp4</p>*/}
-                                            {/*<p style={{fontSize: '12px'}}>vjs.zencdn.net/v/oceans.mp4</p>*/}
+
                                         </Col>
                                     </Row>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
@@ -267,9 +323,10 @@ class Loadmore extends PureComponent {
 
 // 映射Redux state到组件的属性
 function mapStateToProps(state) {
-    console.log(state)
+    // console.log(state)
     return {
-        pannelData: state.recordReducer
+        pannelData: state.recordReducer,
+        playUrl:state.recordReducer.PlayData
     }
 }
 
@@ -281,6 +338,7 @@ function mapDispatchToProps(dispatch) {
         startRtmp: (args, cb) => dispatch(startRtmp(args, cb)),
         endRtmp: (args, cb) => dispatch(endRtmp(args, cb)),
         pannelFun: (args, cb) => dispatch(pannelFun(args, cb)),
+        playsFun: (args, cb) => dispatch(playsFun(args, cb)),
     }
 }
 
