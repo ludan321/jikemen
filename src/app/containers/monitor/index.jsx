@@ -191,7 +191,7 @@ class Loadmore extends PureComponent {
     render() {
         // let {currentPlay} =this.props.playUrl.currentPlay;
         console.log(this.props.playUrl.currentPlay);
-        let currentPlay  = this.props.playUrl.currentPlay?this.props.playUrl.currentPlay:""
+        let currentPlay  = this.props.playUrl.currentPlay?this.props.playUrl.currentPlay:"https://vjs.zencdn.net/v/oceans.mp4"
         return (
             <div>
                 <Row>
