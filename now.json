@@ -1,0 +1,6 @@
+{
+  "name": "zukvnc",
+  "alias": "https://vnc.zukdoor.cloud",
+  "type": "static",
+  "public": false
+}

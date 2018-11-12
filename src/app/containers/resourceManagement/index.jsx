@@ -1,37 +1,13 @@
 import React, {Component} from 'react';
 import {Row, Col, Breadcrumb, Form, Select, Table, Button, Checkbox, Pagination} from 'antd';
-const FormItem = Form.Item;
-const Option = Select.Option
-const ButtonGroup = Button.Group;
 import "./css/index.css"
 import {Link} from "react-router"
-import {axiosGet} from "../../../utils/request"
 import {resourceFun} from "../../actions/resource"
 import {connect} from 'react-redux';
 import moment from "moment"
-
-const data = [
-    {
-        'key':1,
-        "url": "http://35.220.148.164:9998/test_imclass_1_2018-11-08_16-19-25.mkv",
-        "name": "test_imclass_1_2018-11-08_16-19-25.mkv",
-        "memSize": 98,
-        "timeSize": 36,
-        "errorTimes": 0,
-        "downloadTimes": 0,
-        "createTime": "2018-11-09T00:20:04"
-    },
-    {
-        "key":2,
-        "url": "http://35.220.148.164:9998/test_imclass_1_2018-11-08_16-05-49.mkv",
-        "name": "test_imclass_1_2018-11-08_16-05-49.mkv",
-        "memSize": 5901,
-        "timeSize": 74,
-        "errorTimes": 0,
-        "downloadTimes": 0,
-        "createTime": "2018-11-09T00:07:12"
-    }
-];
+const FormItem = Form.Item;
+const Option = Select.Option
+const ButtonGroup = Button.Group;
 class Resouse extends Component {
     constructor(props) {
         super(props)
@@ -104,9 +80,6 @@ class Resouse extends Component {
     };
 
     componentDidMount = () => {
-        // axiosGet("api/v1/video").then(data=>{
-        //     console.log(data)
-        // })
         let parpm={
             url:"api/v1/video",
             recordName:""
