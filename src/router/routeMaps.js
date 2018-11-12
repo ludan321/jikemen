@@ -4,6 +4,7 @@ import  Home from "../app/containers/home/index.jsx"
 import  Login from "../app/containers/login/login"
 import Monitor from "../app/containers/monitor/index"
 import Main from "../app/containers/home/main"
+import Video from "../app/containers/video/video"
 import Resource from "../app/containers/resourceManagement/index"
 import {connect} from "react-redux"
 class RouteMap extends React.Component {
@@ -23,6 +24,7 @@ class RouteMap extends React.Component {
                     <IndexRoute component={Main}/>
                     <Route path="/monitor" component={Monitor}/>
                     <Route path="/resour" component={Resource}/>
+                    <Route path="/video" component={Video}/>
 
                 </Route>
 

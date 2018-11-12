@@ -30,75 +30,75 @@ class Resouse extends Component {
                         checked={this.state.selectedRowKeys.indexOf(record.url) > -1}
                         onChange={() => this.onSelect(record.url)}/>
                 },
-                align:"center",
+                align: "center",
 
             }, {
                 title: "文件名",
                 dataIndex: 'name',
                 sorter: (a, b) => a.name.length - b.name.length,
-                align:"center",
-                className:"thead",
+                align: "center",
+                className: "thead",
 
             },
             {
                 title: '录制日期',
                 dataIndex: 'createTime',
-                sorter: (a, b) => moment(a.createTime,'YYYY-MM-DD HH:mm:ss').valueOf() - moment(b.createTime,'YYYY-MM-DD HH:mm:ss').valueOf(),
-                className:"thead",
-                align:"center",
-                render:(text,record)=>{
+                sorter: (a, b) => moment(a.createTime, 'YYYY-MM-DD HH:mm:ss').valueOf() - moment(b.createTime, 'YYYY-MM-DD HH:mm:ss').valueOf(),
+                className: "thead",
+                align: "center",
+                render: (text, record) => {
                     return moment(record.createTime).format('YYYY-MM-DD, h:mm:ss')
                 }
 
             }, {
                 title: '时长',
                 dataIndex: 'timeSize',
-                className:"thead",
-                align:"center",
-                render:(text,record)=>{
-                    return record.timeSize+"s"
+                className: "thead",
+                align: "center",
+                render: (text, record) => {
+                    return record.timeSize + "s"
                 }
             }, {
                 title: '大小',
                 dataIndex: 'memSize',
-                className:"thead",
-                align:"center",
-                render:(text,record)=>{
-                    return (record.memSize/1024).toFixed(2)+"M"
+                className: "thead",
+                align: "center",
+                render: (text, record) => {
+                    return (record.memSize / 1024).toFixed(2) + "M"
                 }
             }, {
-                title: ()=>{
+                title: () => {
                     return <div>
-                        <p style={{margin:"0px"}}>状态</p>
-                        <p style={{margin:"0px"}}>录制中/最近录制/将要过期</p>
+                        <p style={{margin: "0px"}}>状态</p>
+                        <p style={{margin: "0px"}}>录制中/最近录制/将要过期</p>
                     </div>
                 },
 
                 dataIndex: 'downloadTimes',
-                className:"thead",
-                align:"center"
+                className: "thead",
+                align: "center"
             }];
 
 
     };
 
     componentDidMount = () => {
-        let parpm={
-            url:"api/v1/video",
-            recordName:""
+        let parpm = {
+            url: "api/v1/video",
+            recordName: ""
         }
-        this.props.resourceFun(parpm, ()=> {
+        this.props.resourceFun(parpm, () => {
             // console.log(this.props.resouseData.resouseData)
             let data = this.props.resouseData.resouseData
-            for (var i=0;i<data.length;i++){
+            for (var i = 0; i < data.length; i++) {
                 this.state.allRowKeys.push(data[i].url)
                 this.setState({
-                    loading:!this.state.loading
+                    loading: !this.state.loading
                 })
             }
         })
     };
-    onSelectAll=()=>{
+    onSelectAll = () => {
         this.setState({
             selectedRowKeys: this.state.allRowKeys
         })
@@ -136,29 +136,52 @@ class Resouse extends Component {
         })
 
     }
-    plays=()=>{
+    plays = () => {
         console.log(this.state.selectedRowKeys);
-        let parpm={
-            playUrl:this.state.selectedRowKeys,
-            playNumber:0,
-            currentPlay:this.state.selectedRowKeys[0]
+        let parpm = {
+            playUrl: this.state.selectedRowKeys,
+            playNumber: 0,
+            currentPlay: this.state.selectedRowKeys[0]
         }
-        this.props.playsFun(parpm,()=>{
+        this.props.playsFun(parpm, () => {
             hashHistory.push({
-                pathname:"monitor"
-            })  
+                pathname: "video"
+            })
         })
-        
-        
+
+
     }
-    download=()=>{
+    download = () => {
+        const a = this.refs.file
+        a.download
         console.log(this.state.selectedRowKeys)
-        window.open("http://35.220.148.164:9998/imclass-test_2_2018-11-12_05-23-00.mkv", "_blank")
+        let that = this
+        let i=-1
+        this.timeer = setInterval(()=>{
+            ++i
+            console.log(that.state.selectedRowKeys[i])
+            if(that.state.selectedRowKeys[i]){
+                that.downloadFun(that.state.selectedRowKeys[i])
+
+            }else {
+                clearInterval(this.timeer)
+            }
+
+        },550)
     }
-    
+    downloadFun = (href) => {
+        // console.log(href)
+        const a = document.createElement("a")
+        document.getElementById("root").appendChild(a)
+        a.setAttribute("href", href)
+        a.setAttribute("download", "download");
+        a.click()
+
+    }
+
     render() {
         const {getFieldDecorator} = this.props.form;
-        
+
         return (
             <Form>
                 <div>
@@ -268,7 +291,7 @@ class Resouse extends Component {
                                 size="large"
                                 style={{width: "80px"}}
                                 onClick={this.download}
-                            >下载</Button>
+                            > <a ref="file"></a>下载</Button>
                             <Button
                                 size="large"
                                 style={{width: "80px"}}>分享</Button>
@@ -314,13 +337,12 @@ class Resouse extends Component {
 // export default Form.create()(Resouse)
 
 
-
 // 映射Redux state到组件的属性
 function mapStateToProps(state) {
     // console.log(state)
     return {
 
-        resouseData:state.resouseReducer
+        resouseData: state.resouseReducer
     }
 }
 

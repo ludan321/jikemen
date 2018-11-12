@@ -247,14 +247,14 @@ class Loadmore extends PureComponent {
                                                 onClick={() => this.startRecords()}>
                                             { this.state.openVisible ? '开始录制' : "结束录制"}
                                         </Button>
-                                        <Button type="primary" className="lz-btn"
-                                                onClick={() => this.preVideo()}>
-                                           上一个
-                                        </Button>
-                                        <Button type="primary" className="lz-btn"
-                                                onClick={() => this.nextVideo()}>
-                                           下一个
-                                        </Button>
+                                        {/*<Button type="primary" className="lz-btn"*/}
+                                                {/*onClick={() => this.preVideo()}>*/}
+                                           {/*上一个*/}
+                                        {/*</Button>*/}
+                                        {/*<Button type="primary" className="lz-btn"*/}
+                                                {/*onClick={() => this.nextVideo()}>*/}
+                                           {/*下一个*/}
+                                        {/*</Button>*/}
                                     </div>
                                     <Row style={{width: '100%', margin: '15px 0 0 30px'}}>
                                         <Col span={5}>
