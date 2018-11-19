@@ -3397,7 +3397,7 @@ body {
 .section._fsr-form {
     position: relative;
     z-index: 3;
-    background: url(/marketing/bundles/alba/img/bg-dots.png) 50% 38% no-repeat
+    /* background: url(/marketing/bundles/alba/img/bg-dots.png) 50% 38% no-repeat */
 }
 
 .section._fsr-form .h2 {

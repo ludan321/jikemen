@@ -1,0 +1,21 @@
+parser: babel-eslint
+parserOptions:
+  ecmaVersion: 6
+  ecmaFeatures:
+    jsx: true
+    modules: true
+  sourceType: module
+env:
+  browser: true
+  es6: true
+  node: true
+extends: 
+  - google
+  - eslint:recommended
+  - plugin:react/recommended
+  - prettier
+plugins:
+  - react
+rules:
+  react/no-unescaped-entities: 0
+  react/prop-types: 0

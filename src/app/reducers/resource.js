@@ -1,15 +1,13 @@
-const initialState = {}
-export default function resouseReducer(state = initialState, action) {
-    switch (action.type) {
+const initialState = {};
+export default function resourceReducer(state = initialState, action) {
+  switch (action.type) {
+    // case 'RESOURCE':
+    //   // console.log(action)
+    //   return Object.assign({}, state, {
+    //     resourceData: action.resourceData,
+    //   });
 
-        case "RESOUSE":
-            // console.log(action)PLAY
-            return Object.assign({}, state, {
-                resouseData: action.resouseData
-            });
-            break;
-
-        default:
-            return initialState;
-    }
+    default:
+      return initialState;
+  }
 }

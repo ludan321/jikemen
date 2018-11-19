@@ -1,6 +1,11 @@
 {
   "name": "zukvnc",
-  "alias": "https://vnc.zukdoor.cloud",
-  "type": "static",
-  "public": false
+  "alias": "vnc.zukdoor.cloud",
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/(?<req>.*)",
+      "dest": "http://35.220.212.115:9999/zukvnc/api/$req"
+    }
+  ]
 }

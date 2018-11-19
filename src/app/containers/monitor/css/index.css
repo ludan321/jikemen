@@ -17,3 +17,21 @@
     margin-top: 20px;
     display: inline-block;
 }
+.ant-input-group-addon:first-child{
+    width: 100px !important;
+}
+.ant-input-group.ant-input-group-compact > .ant-select-auto-complete .ant-input{
+    width: 182px !important;
+}
+.monitor .ant-form-item{
+    margin-bottom: 0px ;
+}
+.monitor  .ant-col-5{
+    margin-top: 4px;
+}
+.rtmp{
+    color: red;
+}
+.rtmpipt{
+    border: 1px solid red;
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
-import {hashHistory} from 'react-router';
+import {hashHistory,browserHistory} from 'react-router';
 import RouteMap from './router/routeMaps';
 import rootReducer from './rootReducer';
 import thunk from 'redux-thunk';
