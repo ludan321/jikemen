@@ -11,6 +11,8 @@ import {
   playsFun,
 } from '../../actions/record';
 import {connect} from 'react-redux';
+import RFB from '@novnc/novnc/core/rfb';
+
 import {AreaChart, Area, XAxis, YAxis, CartesianGrid} from 'recharts';
 
 const data = [
@@ -33,6 +35,7 @@ class Loadmore extends PureComponent {
       dataSource: [],
       rtmpUrls: '1',
       isPannelOpen: true,
+        pannelUrl:""
     };
     // this.myRef = React.createRef();
   }
@@ -51,11 +54,20 @@ class Loadmore extends PureComponent {
           recordUrl: values.recordUrl,
           recordName: 'qweqweq',
         };
-        this.props.pannelFun(params, () => {
-          // console.log(123)
-          this.setState({
+        this.props.pannelFun(params, (data) => {
+          console.log(this.props.pannelData.pannel.url)
+            const rfb = new RFB(document.getElementById('screen'), this.props.pannelData.pannel.url,{
+                // scaleViewport:true,
+                // resizeSession:true,
+                // dragViewport:true,
+                // clipViewport:true
+            });
+            this.setState({
             isPannelOpen: !this.state.isPannelOpen,
+              pannelUrl:this.props.pannelData.pannel.url
+
           });
+
         });
       }
     });
@@ -72,6 +84,7 @@ class Loadmore extends PureComponent {
           this.props.pannelFun(params, () => {
             this.setState({
               isPannelOpen: !this.state.isPannelOpen,
+                pannelUrl:""
             });
           });
         } else {
@@ -186,11 +199,16 @@ class Loadmore extends PureComponent {
   };
 
   netCheck = (rule, value, callback) => {
-    if (value.indexOf('http://') === -1 && value.indexOf('https://') === -1) {
-      callback('请输入以http://或者https://开头的网址!');
-    } else {
-      callback();
-    }
+      if(value){
+          if (value.indexOf('http://') === -1 && value.indexOf('https://') === -1) {
+              callback('请输入以http://或者https://开头的网址!');
+          } else {
+              callback();
+          }
+      }else {
+          callback();
+      }
+
   };
 
   render() {
@@ -222,32 +240,30 @@ class Loadmore extends PureComponent {
                     marginLeft: 'auto',
                     marginRight: 'auto',
                     width: '100%',
-                    height: '480px',
-                    padding: '10px',
+                    height: '500px',
+                    //padding: '10px',
                     overflow: 'hidden',
                   }}
                 >
-                  {currentPlay ? (
-                    <iframe
-                      src={currentPlay}
+
+                    <div
+                        id="screen"
                       style={{
                         width: '100%',
-                        height: '100%',
+                        height: this.state.pannelUrl?"100%":'0',
                       }}
-                      title={'VNC Lite'}
+                      //  className={this.state.pannelUrl?"":"screen"}
                     >
-                      <p>Your browser does not support iframes.</p>
-                    </iframe>
-                  ) : (
-                    <img
-                      src={require('./img/logo.png')}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                      }}
-                      alt=""
-                    />
-                  )}
+                    </div>
+
+
+                  <div
+                    style={{
+                      width: '100%',
+                      height: this.state.pannelUrl?"":'100%',
+                    }}
+                    className="screen"
+                  ></div>
                 </div>
               </Col>
               <Col span={8}>
@@ -383,7 +399,7 @@ class Loadmore extends PureComponent {
 
 // 映射Redux state到组件的属性
 function mapStateToProps(state) {
-  // console.log(state)
+  console.log(state)
   return {
     pannelData: state.recordReducer,
     playUrl: state.recordReducer.PlayData,

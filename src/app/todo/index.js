@@ -22,11 +22,11 @@ class RouteMap extends React.Component {
     handleClick(e) {
         const inputNode = findDOMNode(this.refs.input);
         const text = inputNode.value.trim();
-        this.props.dispatch(addTodo(text));
+        this.props.addTodo(text);
         inputNode.value = '';
     }
     completeTodos=(text)=>{
-        this.props.dispatch(completeTodo(text));
+        this.props.completeTodo(text);
     }
     renderFilter=(filter, name)=> {
         if(filter == this.props.filter) {
@@ -38,7 +38,7 @@ class RouteMap extends React.Component {
                 onClick={e => {
                     e.preventDefault();
                     {/*this.props.onFilterChange(filter);*/}
-                    this.props.dispatch(setVisibilityFilter(filter));
+                    this.props.setVisibilityFilter(filter);
                 }}>
                 {name}
             </a>
@@ -107,10 +107,16 @@ function mapStateToProps(state) {
 
 //映射Redux actions到组件的属性
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        addTodo: (args, cb) => dispatch(addTodo(args, cb)),
+        completeTodo: (args, cb) => dispatch(completeTodo(args, cb)),
+        setVisibilityFilter: (args, cb) => dispatch(setVisibilityFilter(args, cb)),
+    };
 }
 
 //连接组件
 export default connect(
-    mapStateToProps)(RouteMap);
+    mapStateToProps ,
+    mapDispatchToProps
+)(RouteMap);
 // export default RouteMap

@@ -70,20 +70,20 @@ export const pannelFun = (params, cb) => {
     return (dispatch) => {
         return axiosPost(params).then(res => {
             console.log('服务器返回：', res);
-            if (res.status === 200) {
-                cb()
-                if(res.data.data.url){
-                    let str = res.data.data.url.replace("ws","http").split("pa")
+            if (res.status === 200&&res.data.code==="0") {
 
-                    console.log(str[0]+"vnc_lite.html?pa"+str[1])
-                    res.data.data.url=str[0]+"vnc_lite.html?pa"+str[1]
-                }
+                // if(res.data.data.url){
+                //     let str = res.data.data.url.replace("ws","http").split("pa")
+                //
+                //     console.log(str[0]+"vnc_lite.html?pa"+str[1])
+                //     res.data.data.url=str[0]+"vnc_lite.html?pa"+str[1]
+                // }
 
                 dispatch({
                     type: "OPENPANNEL",
                     pannelData: res.data.data
                 });
-
+                cb()
             } else {
                 message.error(res['data']['message'])
             }

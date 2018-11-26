@@ -17,7 +17,9 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
-
+// markdown conver to html
+const marked = require("marked");
+const renderer = new marked.Renderer();
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
 const publicPath = '/';
@@ -200,6 +202,21 @@ module.exports = {
           // "url" loader works like "file" loader except that it embeds assets
           // smaller than specified limit in bytes as data URLs to avoid requests.
           // A missing `test` is equivalent to a match.
+          {
+            test: /\.md$/,
+            use: [
+              {
+                loader: "html-loader"
+              },
+              {
+                loader: "markdown-loader",
+                //those options are optional
+                options: {
+                  renderer
+                }
+              }
+            ]
+          },
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),

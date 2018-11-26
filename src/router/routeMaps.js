@@ -6,11 +6,17 @@ import Monitor from '../app/containers/monitor/index';
 import Main from '../app/containers/home/main';
 import Video from '../app/containers/video/video';
 import Resource from '../app/containers/resourceManagement/index';
+import Docs from '../app/containers/docs/index';
 import {connect} from 'react-redux';
-import Todo from "../app/todo"
 class RouteMap extends React.Component {
   updateHandle() {
     // console.log('每次router变化之后都会触发')
+      var oBody  = document.getElementsByTagName("body")[0];
+      if(window.location.hash === "#/docs"){
+          oBody.style.overflow = "hidden"
+      }else {
+          oBody.style.overflow = "scroll"
+      }
   }
 
   routerWillLeave = () => {
@@ -31,8 +37,7 @@ class RouteMap extends React.Component {
         </Route>
 
         <Route path="/login" component={Login} />
-        <Route path="/login" component={Login} />
-        <Route path="/todo" component={Todo} />
+        <Route path="/docs" component={Docs} />
       </Router>
     );
   }

@@ -22,6 +22,9 @@ const ModuleNotFoundPlugin = require('react-dev-utils/ModuleNotFoundPlugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin-alt');
 const typescriptFormatter = require('react-dev-utils/typescriptFormatter');
 
+// markdown conver to html
+const marked = require("marked");
+const renderer = new marked.Renderer();
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
@@ -272,6 +275,21 @@ module.exports = {
         oneOf: [
           // "url" loader works just like "file" loader but it also embeds
           // assets smaller than specified size as data URLs to avoid requests.
+          {
+            test: /\.md$/,
+            use: [
+              {
+                loader: "html-loader"
+              },
+              {
+                loader: "markdown-loader",
+                //those options are optional
+                options: {
+                  renderer
+                }
+              }
+            ]
+          },
           {
             test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
             loader: require.resolve('url-loader'),

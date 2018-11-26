@@ -18,12 +18,12 @@ export default function recordReducer(state = initialState, action) {
                 PlayData: action.playData
             });
             break;
-        case 'RESOURCE':
-            // console.log(action)
-            return Object.assign({}, state, {
-                resourceData: action.resourceData,
-            });
+        // case 'RESOURCE':
+        //     // console.log(action)
+        //     return Object.assign({}, state, {
+        //         resourceData: action.resourceData,
+        //     });
         default:
-            return initialState;
+            return state;
     }
 }

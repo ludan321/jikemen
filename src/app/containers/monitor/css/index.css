@@ -5,7 +5,7 @@
 }
 .mon-left {
     border-right: 1px solid #ddd;
-    height: 500px;
+    /*height: 500px;*/
 }
 
 .mon-right {
@@ -34,4 +34,13 @@
 }
 .rtmpipt{
     border: 1px solid red;
+}
+.screen{
+    background: url("../img/logo.png")  no-repeat center top;
+    background-size:contain ;
+    /*background-repeat: no-repeat;*/
+}
+#screen div canvas{
+    width: 100% !important;
+    height: 556px !important;
 }

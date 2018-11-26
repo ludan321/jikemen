@@ -31,6 +31,7 @@ class Resource extends Component {
             loading: false,
             allRowKeys: [],
             current: 1,
+            loadState:false
         };
         this.fileRef = React.createRef();
         this.columns = [
@@ -114,9 +115,13 @@ class Resource extends Component {
             currentPage: res,
             pageSize: '10',
         };
+        this.setState({
+            loadState:true
+        })
         this.props.resourceFun(param, () => {
             this.setState({
                 allRowKeys: [],
+                loadState:false
             });
             let data = this.props.resourceData.resourceData.content;
             for (var i = 0; i < data.length; i++) {
@@ -163,6 +168,7 @@ class Resource extends Component {
             {
                 current: page,
                 selectedRowKeys: [],
+                loadState:true
             },
             () => {
                 this.video(page);
@@ -350,6 +356,8 @@ class Resource extends Component {
                         pagination={false}
                         total={5}
                         rowKey="url"
+                        loading={this.state.loadState}
+
                     />
                     <Row
                         type="flex"
@@ -358,7 +366,7 @@ class Resource extends Component {
                         justify="center"
                     >
                         <Col>
-                            {recordTotal && (
+                            {recordTotal>0 && (
                                 <Pagination
                                     //onShowSizeChange={onShowSizeChange}
                                     defaultCurrent={3}
@@ -393,7 +401,7 @@ function mapStateToProps(state) {
     console.log(state)
     return {
 
-        resourceData: state.recordReducer,
+        resourceData: state.resourceReducer,
     };
 }
 

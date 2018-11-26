@@ -3,23 +3,37 @@ import {Link} from 'react-router';
 import {Modal, Button, Row, Col, Input, Form, Icon} from 'antd';
 import {connect} from 'react-redux';
 import {loginFetch, loginOut} from '../../actions/loginApi';
-
+import Register from "../register/register"
 const FormItem = Form.Item;
 class Navs extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loginModalVisible: false,
+      isLogin:false
     };
+    this.myRef = React.createRef();
   }
 
+  componentDidMount() {
+    this.setState({
+      isLogin:!!window.sessionStorage.getItem("Authorization")
+    });
+  }
   // 登录
   handle_login_btn = _type => {
-    if (!_type) {
+    if (!this.state.isLogin) {
       this.setState({loginModalVisible: true});
     } else {
       this.props.loginOut({
         url: 'api/v1/user',
+      },()=>{
+
+        this.setState({
+          isLogin:!!window.sessionStorage.getItem("Authorization")
+        },()=>{
+          // console.log(this.state.isLogin)
+        });
       });
     }
   };
@@ -32,18 +46,34 @@ class Navs extends Component {
           url: 'api/v1/user',
           ...values,
         };
-        this.props.loginFetch(_object);
-        this.setState({loginModalVisible: false});
+        this.props.loginFetch(_object,()=>{
+          // console.log(123)
+          this.props.form.resetFields();
+
+          this.setState({
+            loginModalVisible: false,
+            isLogin:!!window.sessionStorage.getItem("Authorization")
+          });
+        });
+
       }
     });
   };
-
   // 返回
   handle_cancle = () => {
     this.setState({
       loginModalVisible: false,
+      registerModalVisible: false,
     });
   };
+  register=()=>{
+
+    console.log( this.child);
+    this.child.register()
+  };
+  onRef = (ref) => {
+    this.child = ref
+  }
 
   render() {
     const {getFieldDecorator} = this.props.form;
@@ -69,7 +99,8 @@ class Navs extends Component {
                     <ul className="nav-menu__dropdown-body__list nav-menu__dropdown-body__list--products">
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--flex-ga nav-menu__dropdown-body__list-item__icon--product" />
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--flex-ga nav-menu__dropdown-body__list-item__icon--product"/>
                           <div className="nav-menu__dropdown-body__list-item__title">
                             Zukdoor Flex
                           </div>
@@ -80,7 +111,8 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sms nav-menu__dropdown-body__list-item__icon--product">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sms nav-menu__dropdown-body__list-item__icon--product">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="15.2"
@@ -98,7 +130,8 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--voice nav-menu__dropdown-body__list-item__icon--product">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--voice nav-menu__dropdown-body__list-item__icon--product">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16.8"
@@ -116,7 +149,8 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--video nav-menu__dropdown-body__list-item__icon--product">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--video nav-menu__dropdown-body__list-item__icon--product">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="15.1"
@@ -134,7 +168,8 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--authy nav-menu__dropdown-body__list-item__icon--product">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--authy nav-menu__dropdown-body__list-item__icon--product">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               viewBox="0 0 31.17 23.82"
@@ -152,13 +187,14 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sip-trunking nav-menu__dropdown-body__list-item__icon--product">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sip-trunking nav-menu__dropdown-body__list-item__icon--product">
                             <svg
                               enableBackground="new 0 0 32 32"
                               viewBox="0 0 32 32"
                               xmlns="http://www.w3.org/2000/svg"
                             >
-                              <g fill="#0d122b" />
+                              <g fill="#0d122b"/>
                             </svg>
                           </aside>
                           <div className="nav-menu__dropdown-body__list-item__title">
@@ -171,14 +207,15 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--wireless nav-menu__dropdown-body__list-item__icon--product">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--wireless nav-menu__dropdown-body__list-item__icon--product">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="39.6"
                               height="39"
                               viewBox="107.2 35 39.6 39"
                             >
-                              <g fill="#008CFF" />
+                              <g fill="#008CFF"/>
                             </svg>
                           </aside>
                           <div className="nav-menu__dropdown-body__list-item__title">
@@ -275,7 +312,7 @@ class Navs extends Component {
               </div>
             </li>
             <li className="nav-menu__item">
-              <a>Docs &amp; Tools</a>
+              <Link to="/docs">文档</Link>
               <div className="nav-menu__dropdown">
                 <ul className="nav-menu__dropdown-wrapper">
                   <li className="nav-menu__dropdown-body">
@@ -301,7 +338,7 @@ class Navs extends Component {
                         </a>
                       </li>
                     </ul>
-                    <hr className="nav-menu__dropdown-body__separator" />
+                    <hr className="nav-menu__dropdown-body__separator"/>
                     <ul className="nav-menu__dropdown-body__list">
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
@@ -335,14 +372,15 @@ class Navs extends Component {
                         </a>
                       </li>
                     </ul>
-                    <hr className="nav-menu__dropdown-body__separator" />
+                    <hr className="nav-menu__dropdown-body__separator"/>
                     <header className="nav-menu__dropdown-body__header">
                       Tools
                     </header>
                     <ul className="nav-menu__dropdown-body__list nav-menu__dropdown-body__list--products">
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--runtime nav-menu__dropdown-body__list-item__icon--tool">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--runtime nav-menu__dropdown-body__list-item__icon--tool">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="16"
@@ -360,7 +398,8 @@ class Navs extends Component {
                       </li>
                       <li>
                         <a className="nav-menu__dropdown-body__list-item">
-                          <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--studio nav-menu__dropdown-body__list-item__icon--studio">
+                          <aside
+                            className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--studio nav-menu__dropdown-body__list-item__icon--studio">
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               width="15"
@@ -533,7 +572,7 @@ class Navs extends Component {
               </a>
             </li>
             <li className="nav-cta">
-              <a className="nav-cta__button nav-cta__button--action">Sign up</a>
+              <a className="nav-cta__button nav-cta__button--action" onClick={this.register}>注册</a>
             </li>
             <li className="nav-cta" role="nav-burger">
               <a className="nav-cta__button nav-cta__button--hamburger">Menu</a>
@@ -588,7 +627,7 @@ class Navs extends Component {
                   className="nav-submenu__link"
                   onClick={() => this.handle_login_btn(this.props.login_Type)}
                 >
-                  {this.props.login_Type ? '退出' : '登录'}
+                  {this.state.isLogin ? '退出' : '登录'}
                 </a>
               </li>
             </ul>
@@ -611,7 +650,8 @@ class Navs extends Component {
                 </li>
                 <li data-order="0">
                   <a className="nav-menu__dropdown-body__list-item">
-                    <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sms nav-menu__dropdown-body__list-item__icon--product" />
+                    <aside
+                      className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sms nav-menu__dropdown-body__list-item__icon--product"/>
                     <div className="nav-menu__dropdown-body__list-item__title">
                       Programmable SMS
                     </div>
@@ -622,7 +662,8 @@ class Navs extends Component {
                 </li>
                 <li data-order="0">
                   <a className="nav-menu__dropdown-body__list-item">
-                    <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--voice nav-menu__dropdown-body__list-item__icon--product" />
+                    <aside
+                      className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--voice nav-menu__dropdown-body__list-item__icon--product"/>
                     <div className="nav-menu__dropdown-body__list-item__title">
                       Programmable Voice
                     </div>
@@ -633,7 +674,8 @@ class Navs extends Component {
                 </li>
                 <li data-order="0 1 2 3">
                   <a className="nav-menu__dropdown-body__list-item">
-                    <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--video nav-menu__dropdown-body__list-item__icon--product" />
+                    <aside
+                      className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--video nav-menu__dropdown-body__list-item__icon--product"/>
                     <div className="nav-menu__dropdown-body__list-item__title">
                       Programmable Video
                     </div>
@@ -644,7 +686,8 @@ class Navs extends Component {
                 </li>
                 <li data-order="0 1 2 4">
                   <a className="nav-menu__dropdown-body__list-item">
-                    <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--authy nav-menu__dropdown-body__list-item__icon--product" />
+                    <aside
+                      className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--authy nav-menu__dropdown-body__list-item__icon--product"/>
                     <div className="nav-menu__dropdown-body__list-item__title">
                       Authy
                     </div>
@@ -655,7 +698,8 @@ class Navs extends Component {
                 </li>
                 <li data-order="0 1 2">
                   <a className="nav-menu__dropdown-body__list-item">
-                    <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sip-trunking nav-menu__dropdown-body__list-item__icon--product" />
+                    <aside
+                      className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--sip-trunking nav-menu__dropdown-body__list-item__icon--product"/>
                     <div className="nav-menu__dropdown-body__list-item__title">
                       Elastic SIP Trunking
                     </div>
@@ -666,7 +710,8 @@ class Navs extends Component {
                 </li>
                 <li data-order="0 1 2 3 4 5">
                   <a className="nav-menu__dropdown-body__list-item">
-                    <aside className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--wireless nav-menu__dropdown-body__list-item__icon--product" />
+                    <aside
+                      className="nav-menu__dropdown-body__list-item__icon nav-menu__dropdown-body__list-item__icon--wireless nav-menu__dropdown-body__list-item__icon--product"/>
                     <div className="nav-menu__dropdown-body__list-item__title">
                       Programmable Wireless
                     </div>
@@ -681,7 +726,7 @@ class Navs extends Component {
                   </a>
                 </li>
               </ul>
-              <hr className="nav-mobile__separator" />
+              <hr className="nav-mobile__separator"/>
               <ul className="nav-mobile__list">
                 <li>
                   <a className="nav-mobile__list-item" title="Solutions">
@@ -715,7 +760,7 @@ class Navs extends Component {
                   </a>
                 </li>
               </ul>
-              <hr className="nav-mobile__separator" />
+              <hr className="nav-mobile__separator"/>
               <div className="nav-mobile__ctas">
                 <a className="nav-mobile__ctas__button nav-mobile__ctas__button--action">
                   Sign up
@@ -750,7 +795,7 @@ class Navs extends Component {
                             rules: [
                               {
                                 required: true,
-                                message: 'Please input your username!',
+                                message: '请输入用户名!',
                               },
                             ],
                           })(
@@ -774,7 +819,7 @@ class Navs extends Component {
                             rules: [
                               {
                                 required: true,
-                                message: 'Please input your Password!',
+                                message: '请输入密码!',
                               },
                             ],
                           })(
@@ -809,6 +854,9 @@ class Navs extends Component {
             </Col>
           </Row>
         </Modal>
+
+        <Register onRef={ this.onRef}/>
+
       </nav>
     );
   }
@@ -821,8 +869,8 @@ const mapStateToProps = state => ({
 
 // 数据银蛇action
 const mapDispatchToProps = dispatch => ({
-  loginFetch: iteminfo => dispatch(loginFetch(iteminfo)),
-  loginOut: item => dispatch(loginOut(item)),
+  loginFetch: (iteminfo,cb) => dispatch(loginFetch(iteminfo,cb)),
+  loginOut: (item,cb) => dispatch(loginOut(item,cb)),
 });
 
 export default connect(

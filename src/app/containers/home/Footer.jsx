@@ -106,7 +106,7 @@ class Footer extends Component {
             <footer className="footer__footer">
               <div className="footer__logo" title="Zukdoor">
                 <img
-                  style={{width: '30px', height: '30px'}}
+                  style={{width: '30px', height: '30px',    margin: "0 auto"}}
                   src={require('./img/logo.png')}
                   alt=""
                 />
